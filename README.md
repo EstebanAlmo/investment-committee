@@ -11,9 +11,9 @@ real money.
 
 ## Status
 
-Early foundation stage. The project structure, conventions, and documentation
-exist; no data fetching, no agents, and no database are implemented yet. See
-[`docs/roadmap.md`](docs/roadmap.md) for the planned build order.
+Early foundation stage. The domain model and a first market data provider
+(daily history via `yfinance`) are implemented; no agents and no database yet.
+See [`docs/roadmap.md`](docs/roadmap.md) for the planned build order.
 
 ## Current constraints
 
@@ -57,6 +57,23 @@ them. `.env` is git-ignored and must never be committed.
 
 ```powershell
 pytest
+```
+
+## Usage example
+
+Fetch one year of daily price history for a ticker as a `MarketSnapshot`.
+The rest of the application only ever depends on `MarketIntelligenceService`
+and `MarketDataProvider` — never on the concrete `yfinance` provider:
+
+```python
+from investment_committee.market_intelligence import MarketIntelligenceService
+
+service = MarketIntelligenceService()  # defaults to the yfinance provider
+snapshot = service.get_daily_history("AAPL")
+
+print(snapshot.asset.ticker)          # "AAPL"
+print(len(snapshot.price_bars))       # ~252 daily bars
+print(snapshot.latest_price_bar)      # most recent PriceBar
 ```
 
 ## Design principles

@@ -11,9 +11,11 @@ requires-python = ">=3.11,<4.0"
 license = { text = "Proprietary" }
 authors = [{ name = "Esteban Almo" }]
 
-# Intentionally minimal for the foundation commit.
-# Data, LLM, and storage dependencies will be added as each layer is implemented.
-dependencies = []
+# Intentionally minimal. Additional LLM and storage dependencies will be
+# added as each layer is implemented.
+dependencies = [
+    "yfinance>=0.2.40",
+]
 
 [project.optional-dependencies]
 dev = [
@@ -25,3 +27,4 @@ where = ["src"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["src"]
