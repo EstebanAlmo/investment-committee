@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "investment-committee"
+version = "0.1.0"
+description = "Personal multi-agent investment analysis system for stocks and ETFs."
+readme = "README.md"
+requires-python = ">=3.11,<4.0"
+license = { text = "Proprietary" }
+authors = [{ name = "Esteban Almo" }]
+
+# Intentionally minimal for the foundation commit.
+# Data, LLM, and storage dependencies will be added as each layer is implemented.
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
