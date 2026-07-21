@@ -21,9 +21,25 @@ phases should not be started before earlier ones are functional.
 ## Phase 1 — Market Intelligence (single asset, single source)
 
 - Fetch price history for one stock ticker from one free data source.
+  **(done — `YFinanceProvider`)**
 - Basic data validation (missing bars, obvious bad values).
-- A handful of core technical indicators computed in Python.
+- A handful of core technical indicators computed in Python. **(done —
+  see Epic 3 below)**
 - Tests against recorded/fixture data, not live network calls.
+
+## Epic 3 — Indicator Engine (complete)
+
+- Deterministic `IndicatorEngine` in `indicators/` that turns a
+  `MarketSnapshot` into an `IndicatorSnapshot`: SMA 20/50/200, 1d/30d/90d/YTD
+  returns, annualized volatility, maximum drawdown, and RSI 14.
+- Standard-library-only calculations (`decimal`, `statistics`) — no pandas,
+  numpy, TA-Lib, external indicator libraries, network access, or LLMs.
+- `IndicatorCalculationError` raised for structurally invalid input (no
+  price bars, unordered price bars, invalid closing prices); indicators that
+  merely lack enough history return `None` instead.
+- Full unit test coverage in `tests/indicators/`, including insufficient
+  history, flat/rising prices, unordered bars, and a no-network-access
+  check.
 
 ## Phase 2 — Memory and Storage (SQLite introduced here)
 

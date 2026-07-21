@@ -11,9 +11,10 @@ real money.
 
 ## Status
 
-Early foundation stage. The domain model and a first market data provider
-(daily history via `yfinance`) are implemented; no agents and no database yet.
-See [`docs/roadmap.md`](docs/roadmap.md) for the planned build order.
+Early foundation stage. The domain model, a first market data provider
+(daily history via `yfinance`), and a deterministic indicator engine
+(`indicators/`) are implemented; no agents and no database yet. See
+[`docs/roadmap.md`](docs/roadmap.md) for the planned build order.
 
 ## Current constraints
 
@@ -27,8 +28,9 @@ See [`docs/roadmap.md`](docs/roadmap.md) for the planned build order.
 
 ```
 src/investment_committee/
-├── market_intelligence/   # prices, history, fundamentals, news, indicators
-├── committee/              # analyst, researcher, risk, and PM agents
+├── market_intelligence/   # prices, history, fundamentals, news
+├── indicators/             # deterministic technical and risk indicator engine
+├── committee/                # analyst, researcher, risk, and PM agents
 ├── memory/                  # analysis runs, reports, recommendations, audit history
 ├── evaluation/               # benchmarking, returns, risk metrics, calibration
 ├── portfolio/                 # portfolio state and (later) real portfolio monitoring
@@ -74,6 +76,20 @@ snapshot = service.get_daily_history("AAPL")
 print(snapshot.asset.ticker)          # "AAPL"
 print(len(snapshot.price_bars))       # ~252 daily bars
 print(snapshot.latest_price_bar)      # most recent PriceBar
+```
+
+Then run that `MarketSnapshot` through `IndicatorEngine` to get a set of
+deterministic technical and risk indicators as an `IndicatorSnapshot`:
+
+```python
+from investment_committee.indicators import IndicatorEngine
+
+indicators = IndicatorEngine().calculate(snapshot)
+
+print(indicators.latest_close)             # most recent closing price
+print(indicators.sma_50)                   # 50-day simple moving average, or None
+print(indicators.rsi_14)                   # 14-period RSI, or None
+print(indicators.annualized_volatility)    # annualized volatility, or None
 ```
 
 ## Design principles
