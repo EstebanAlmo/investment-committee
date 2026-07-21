@@ -27,9 +27,27 @@ sits behind an adapter so it can be replaced without touching domain code.
 │ 6. Integrations   (integrations/)                              │
 │    TradingAgents adapter · future LLM/broker/data adapters     │
 └─────────────────────────────────────────────────────────────┘
+
+Every layer above may also depend on:
+┌─────────────────────────────────────────────────────────────┐
+│ 0. Domain   (domain/)                                          │
+│    Asset · PriceBar · MarketSnapshot · Recommendation          │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ## Layers
+
+### 0. Domain — `domain/`
+
+The framework-independent core types every other layer shares: `Asset`,
+`PriceBar`, `MarketSnapshot`, and `Recommendation`. These are frozen
+dataclasses with no dependency on external providers, storage, or
+TradingAgents — just the standard library. They exist below Market
+Intelligence in the dependency order: every layer may import from `domain/`,
+but `domain/` imports from nothing else in this project. `domain/` does not
+compute indicators or persist anything; it only defines the shapes and their
+invariants (e.g. a `PriceBar`'s high cannot be lower than its open, low, or
+close; a ticker is normalized and cannot be blank).
 
 ### 1. Market Intelligence — `market_intelligence/`
 
@@ -93,8 +111,10 @@ are depended on by `committee/` and `interfaces/`.
 - `evaluation` → `memory`
 - `portfolio`, `simulation`, `education` → `market_intelligence`, `memory`
 - `market_intelligence`, `memory` → `integrations` (via adapters only)
-- Nothing depends on `interfaces`. `integrations` depends on nothing else in
-  this project.
+- Every layer → `domain` (for `Asset`, `PriceBar`, `MarketSnapshot`,
+  `Recommendation`)
+- Nothing depends on `interfaces`. `integrations` and `domain` depend on
+  nothing else in this project.
 
 ## Why this shape
 

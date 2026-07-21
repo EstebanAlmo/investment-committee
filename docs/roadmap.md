@@ -4,12 +4,19 @@ This roadmap covers the MVP only. Each phase should leave the project in a
 working, tested state before the next one starts. Order can shift, but later
 phases should not be started before earlier ones are functional.
 
-## Phase 0 — Foundation (this task)
+## Phase 0 — Foundation (complete)
 
 - Project structure, `pyproject.toml`, `.gitignore`, `.env.example`.
 - `README.md`, `CLAUDE.md`, architecture and roadmap docs.
 - Empty packages for every layer, one importability test.
 - No data fetching, no agents, no database.
+
+## Epic 1 — Domain model (in progress)
+
+- Framework-independent `domain/` package: `Asset`, `PriceBar`,
+  `MarketSnapshot`, `Recommendation`.
+- Frozen dataclasses and enums, standard library only, no persistence.
+- Focused unit tests for validation rules and invariants.
 
 ## Phase 1 — Market Intelligence (single asset, single source)
 
