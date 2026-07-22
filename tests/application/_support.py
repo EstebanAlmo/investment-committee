@@ -5,6 +5,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from decimal import Decimal
 
+from investment_committee.application.models import AnalysisResult
 from investment_committee.committee import (
     AgentReport,
     AgentStance,
@@ -14,6 +15,7 @@ from investment_committee.committee import (
 )
 from investment_committee.domain import Asset, AssetType, MarketSnapshot, PriceBar
 from investment_committee.indicators import IndicatorSnapshot
+from investment_committee.memory.models import StrategyMetadata
 
 UTC_NOW = datetime(2026, 7, 21, 12, 0, tzinfo=timezone.utc)
 
@@ -145,3 +147,46 @@ class FakeCommitteeEngine:
         if isinstance(self._result, Exception):
             raise self._result
         return self._result
+
+
+def make_strategy_metadata(**overrides: str) -> StrategyMetadata:
+    fields = {
+        "strategy_name": "deterministic_committee",
+        "strategy_version": "1",
+        "indicator_engine_version": "1",
+        "application_version": "0.1.0",
+    }
+    fields.update(overrides)
+    return StrategyMetadata(**fields)
+
+
+class FakeApplicationService:
+    """Duck-typed ApplicationService stand-in; no subclassing required."""
+
+    def __init__(self, result: AnalysisResult | Exception) -> None:
+        self._result = result
+        self.calls: list[str] = []
+
+    def analyze_asset(self, symbol: str) -> AnalysisResult:
+        self.calls.append(symbol)
+        if isinstance(self._result, Exception):
+            raise self._result
+        return self._result
+
+
+class FakeDecisionLedger:
+    """Duck-typed DecisionLedger stand-in; no subclassing required.
+
+    `failure`, if given, is raised by append() every time instead of
+    recording - used to exercise RecordDecisionUseCase's error translation.
+    """
+
+    def __init__(self, failure: Exception | None = None) -> None:
+        self._failure = failure
+        self.appended: list[object] = []
+
+    def append(self, record: object) -> None:
+        self.appended.append(record)
+        if self._failure is not None:
+            self.appended.pop()
+            raise self._failure

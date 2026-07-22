@@ -17,8 +17,9 @@ from .errors import (
     InvalidTickerError,
     MarketDataUnavailableError,
 )
-from .factory import build_default_application_service
+from .factory import build_default_application_service, build_default_record_decision_use_case
 from .models import AnalysisResult
+from .record_decision import DecisionRecordingError, RecordDecisionResult, RecordDecisionUseCase
 from .service import ApplicationService
 
 __all__ = [
@@ -31,6 +32,10 @@ __all__ = [
     "CommitteeDecisionFailedError",
     "build_default_application_service",
     "analyze_asset",
+    "RecordDecisionUseCase",
+    "RecordDecisionResult",
+    "DecisionRecordingError",
+    "build_default_record_decision_use_case",
 ]
 
 

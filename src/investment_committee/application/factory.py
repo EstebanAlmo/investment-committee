@@ -15,7 +15,9 @@ from investment_committee.committee import (
 )
 from investment_committee.indicators import IndicatorEngine
 from investment_committee.market_intelligence import MarketIntelligenceService
+from investment_committee.memory import DETERMINISTIC_STRATEGY_METADATA, DecisionLedger, JsonLinesDecisionLedger
 
+from .record_decision import RecordDecisionUseCase
 from .service import ApplicationService
 
 
@@ -37,4 +39,24 @@ def build_default_application_service() -> ApplicationService:
             devils_advocate=DeterministicDevilsAdvocate(),
             chair=DeterministicCommitteeChair(),
         ),
+    )
+
+
+def build_default_record_decision_use_case(
+    ledger: DecisionLedger | None = None,
+) -> RecordDecisionUseCase:
+    """Assemble the production RecordDecisionUseCase for the deterministic strategy.
+
+    Binds together the deterministic ApplicationService (via
+    build_default_application_service(), unchanged), the matching
+    DETERMINISTIC_STRATEGY_METADATA, and a durable ledger (a
+    JsonLinesDecisionLedger at the default path unless `ledger` overrides
+    it) - see spec-005 S13, "Production binding guarantee." No network
+    access happens during construction - only during a subsequent record()
+    or analyze_and_record() call.
+    """
+    return RecordDecisionUseCase(
+        application_service=build_default_application_service(),
+        ledger=ledger if ledger is not None else JsonLinesDecisionLedger(),
+        strategy_metadata=DETERMINISTIC_STRATEGY_METADATA,
     )

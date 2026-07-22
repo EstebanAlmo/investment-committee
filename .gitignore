@@ -25,9 +25,11 @@ env/
 data/raw/*
 data/processed/*
 data/reports/*
+data/ledger/*
 !data/raw/.gitkeep
 !data/processed/.gitkeep
 !data/reports/.gitkeep
+!data/ledger/.gitkeep
 
 # Testing / coverage
 .pytest_cache/

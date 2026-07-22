@@ -73,6 +73,10 @@ def test_public_exports_are_exactly_the_expected_set() -> None:
         "CommitteeDecisionFailedError",
         "build_default_application_service",
         "analyze_asset",
+        "RecordDecisionUseCase",
+        "RecordDecisionResult",
+        "DecisionRecordingError",
+        "build_default_record_decision_use_case",
     }
     assert set(application.__all__) == expected
     for name in expected:

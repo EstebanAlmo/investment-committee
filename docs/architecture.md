@@ -282,9 +282,10 @@ directly; the Application Service now owns that composition.
   `memory`, `evaluation`, `portfolio`, `simulation`, `education`.
 - `committee` → `market_intelligence`, `indicators`.
 - `indicators` → `market_intelligence`.
+- `memory` → `committee`, `indicators`.
 - `evaluation` → `memory`.
 - `portfolio`, `simulation`, `education` → `market_intelligence`, `memory`.
-- `market_intelligence`, `memory` → `integrations` (via adapters only).
+- `market_intelligence` → `integrations` (via adapters only).
 - A future LLM-backed `Analyst` in `committee/` → `integrations` (via
   adapters only), same rule.
 - Every layer → `domain` (for `Asset`, `PriceBar`, `MarketSnapshot`,
