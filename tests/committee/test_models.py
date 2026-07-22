@@ -111,6 +111,7 @@ def make_investment_decision(
 
 def test_public_exports_match_approved_api() -> None:
     expected = {
+        # spec-002: domain shapes
         "CommitteeRole",
         "ANALYST_ROLES",
         "AgentStance",
@@ -120,6 +121,15 @@ def test_public_exports_match_approved_api() -> None:
         "RiskSeverity",
         "RiskItem",
         "InvestmentDecision",
+        # spec-003: deterministic committee engine
+        "Analyst",
+        "DeterministicTechnicalAnalyst",
+        "DeterministicRiskManager",
+        "DeterministicDevilsAdvocate",
+        "DeterministicCommitteeChair",
+        "DeterministicCommitteeEngine",
+        "CommitteeEngineError",
+        "Clock",
     }
     assert set(committee.__all__) == expected
     for name in expected:
